@@ -28,6 +28,7 @@
             color: var(--dark-coffee);
             overflow-x: hidden;
             line-height: 1.8;
+            word-break: keep-all; /* 防止語詞被切斷 */
         }
 
         .serif-font {
@@ -60,6 +61,8 @@
         .text-black { color: var(--pure-black); }
         .bg-brand { background-color: var(--brand-purple); }
 
+        .inline-phrase { display: inline-block; }
+
         /* --- 視覺層次分段 --- */
         .section-pain {
             background-color: var(--shadow-gray);
@@ -90,7 +93,7 @@
             background: white;
             border: 1px solid rgba(196, 64, 157, 0.05);
             border-radius: 2.5rem;
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 1.05s cubic-bezier(0.23, 1, 0.32, 1);
             box-shadow: 0 10px 30px rgba(196, 64, 157, 0.03);
         }
         .vision-card:hover {
@@ -249,7 +252,7 @@
             opacity: 0.4;
         }
 
-        /* --- 修正滾動補償 (Scroll Offset) --- */
+        /* --- 滾動補償 --- */
         [id^="step-"], #story, #system, #scalpels, #flow-summary, #meeting, #log {
             scroll-margin-top: 140px;
         }
@@ -260,6 +263,7 @@
             box-shadow: 0 25px 50px -12px rgba(61, 43, 31, 0.15);
         }
 
+        /* --- 環型圖修正 (PAUSE Circle) --- */
         .pause-container {
             position: relative;
             width: 100%;
@@ -269,14 +273,14 @@
         }
         .pause-circle-wrap {
             position: absolute;
-            inset: 22%; 
+            inset: 15%; /* 稍微拉大圓環範圍 */
             border: 1px solid rgba(180, 138, 90, 0.2);
             border-radius: 50%;
         }
         .pause-item {
             position: absolute;
-            width: 110px; 
-            height: 110px;
+            width: clamp(80px, 18vw, 100px); 
+            height: clamp(80px, 18vw, 100px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -287,17 +291,19 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 10;
             text-decoration: none;
+            border: 1px solid rgba(180, 138, 90, 0.05);
         }
         .pause-item:hover {
-            transform: scale(1.08);
+            transform: scale(1.1);
             border: 2px solid var(--brand-purple);
             box-shadow: 0 15px 35px rgba(196, 64, 157, 0.25);
         }
-        .p-pos { top: 0%; left: 50%; transform: translate(-50%, -15%); }
-        .a-pos { top: 35%; left: 0%; transform: translate(-15%, -50%); }
-        .u-pos { bottom: 5%; left: 15%; }
-        .s-pos { bottom: 5%; right: 15%; }
-        .e-pos { top: 35%; right: 0%; transform: translate(15%, -50%); }
+        /* 電腦版定位修正 */
+        .p-pos { top: 0%; left: 50%; transform: translate(-50%, -40%); }
+        .a-pos { top: 35%; left: 0%; transform: translate(-30%, -50%); }
+        .u-pos { bottom: 5%; left: 10%; transform: translate(0, 0); }
+        .s-pos { bottom: 5%; right: 10%; transform: translate(0, 0); }
+        .e-pos { top: 35%; right: 0%; transform: translate(30%, -50%); }
 
         .center-label {
             position: absolute;
@@ -330,7 +336,6 @@
             z-index: 1;
         }
         
-        /* 剔透橘金薄霧核心效果 */
         .cta-mist-1 {
             position: absolute;
             width: 140%;
@@ -495,7 +500,7 @@
     <nav class="fixed w-full z-50 px-8 py-6 flex justify-between items-center bg-white/40 backdrop-blur-md border-b border-stone-200/50">
         <div class="flex items-center gap-4 text-left">
             <img src="https://i.ibb.co/DgV8LVCs/LOGO.png" alt="Scar Chen Logo" class="h-10 md:h-12 w-auto">
-            <div class="text-sm md:text-xl font-bold tracking-widest text-coffee italic uppercase text-black serif-font">SCAR CHEN | PAUSE ENGINEERING</div>
+            <div class="text-sm md:text-xl font-bold tracking-widest text-coffee italic uppercase text-black serif-font text-left">SCAR CHEN | PAUSE ENGINEERING</div>
         </div>
         <div class="hidden md:flex space-x-10 text-xs font-bold tracking-widest uppercase text-gold items-center">
             <a href="#story" class="hover:text-brand transition">關於Scar</a>
@@ -506,7 +511,7 @@
 
     <!-- Hero Section -->
     <header class="relative min-h-screen flex items-center justify-center pt-24 px-6 bg-white text-center">
-        <div class="max-w-4xl text-center">
+        <div class="max-w-4xl text-center mx-auto">
             <div class="inline-block px-6 py-2 border border-gold text-gold rounded-full text-xs font-bold tracking-widest mb-10 animate-fade text-center mx-auto">
                 RECONSTRUCTING SENSITIVE LIFE
             </div>
@@ -514,7 +519,7 @@
                 你的敏銳 <br> 是等待被解鎖的 <br> <span class="highlight-energy">高階能量</span>
             </h1>
             <p class="text-lg md:text-xl text-coffee mb-16 leading-loose tracking-wide font-light text-center mx-auto">
-                不需要變鈍，你只需要一套精密的系統 <br>
+                不需要變鈍 你只需要一套精密的系統 <br>
                 讓強大的感測力 成為你的主導力 <br>
                 將溫柔留給自己 活出發光的版本
             </p>
@@ -530,67 +535,66 @@
     <!-- Section: Pain Point Resonance -->
     <section class="section-pain py-32 px-6">
         <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-20 animate-fade">
-                <h2 class="text-sm tracking-[0.4em] text-gold font-bold mb-6 uppercase text-black serif-font">Common Overload</h2>
-                <p class="text-3xl md:text-4xl font-bold text-black italic serif-font mb-6 text-center">你也常在這些瞬間，感到靈魂超載嗎？</p>
+            <div class="text-center mb-20 animate-fade text-center">
+                <h2 class="text-sm tracking-[0.4em] text-gold font-bold mb-6 uppercase text-black serif-font text-center">Common Overload</h2>
+                <p class="text-3xl md:text-4xl font-bold text-black italic serif-font mb-6 text-center">你也常在這些瞬間 感到靈魂超載嗎</p>
             </div>
 
+            <!-- 痛點圖卡排版修正：修正圖卡 01 位移問題 -->
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
-                <!-- 圖卡 01 -->
-                <div class="pain-card p-10 border border-transparent">
-                    <div class="illu-box">
+                <!-- 圖卡 01 修正對齊 -->
+                <div class="pain-card p-8 sm:p-10 lg:p-12 border border-transparent flex flex-col items-start justify-start text-left">
+                    <div class="illu-box !justify-start">
                         <svg viewBox="0 0 100 100" class="h-full"><path d="M30 80 Q50 75 70 80 M45 75 C45 75 35 60 40 45 C45 30 65 30 70 45 C75 60 65 75 65 75" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="55" cy="35" r="8" fill="none" stroke="currentColor" stroke-width="2"/><rect x="75" y="20" width="15" height="30" rx="2" fill="none" stroke="#B48A5A" stroke-width="2"/><rect x="78" y="40" width="9" height="6" fill="#C4409D"/></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-black mb-4 leading-relaxed text-left">明明什麼都沒做<br>卻累得想消失？</h3>
-                    <p class="text-coffee/80 leading-loose text-left">只是正常的社交與工作，電力卻像漏水一樣見底，那種「不明原因」的疲累感，正默默掏空你的生活</p>
+                    <h3 class="text-xl font-bold text-black mb-6 leading-snug">明明什麼都沒做<br>卻累得想消失</h3>
+                    <p class="text-coffee/80 leading-relaxed text-sm md:text-base">只是正常的社交與工作 電力卻像漏水一樣見底 那種「不明原因」的疲累感 正默默掏空你的生活</p>
                 </div>
                 <!-- 圖卡 02 -->
-                <div class="pain-card p-10 border border-transparent">
-                    <div class="illu-box">
+                <div class="pain-card p-8 sm:p-10 lg:p-12 border border-transparent flex flex-col items-start justify-start text-left">
+                    <div class="illu-box !justify-start">
                         <svg viewBox="0 0 100 100" class="h-full"><path d="M40 80 C40 60 35 50 40 30 C45 15 65 15 70 30 C75 50 70 60 70 80" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M30 30 Q35 15 50 20 Q65 10 75 25 Q90 35 75 50 Q60 60 45 50 Q30 45 30 30" fill="none" stroke="#C4409D" stroke-width="1.5" opacity="0.6"/><path d="M35 35 Q45 25 55 35 Q65 45 55 55 Q45 65 35 55 Z" fill="none" stroke="#B48A5A" stroke-width="1"/></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-black mb-4 leading-relaxed text-left">腦袋裡的「災難編劇」<br>又開演了？</h3>
-                    <p class="text-coffee/80 leading-loose text-left">一句無心的話，就能在心裡演成一場悲劇，過度思考讓你被雜訊淹沒，迷失了真實的事實</p>
+                    <h3 class="text-xl font-bold text-black mb-6 leading-snug">腦袋裡的「災難編劇」　<br>　又開演了</h3>
+                    <p class="text-coffee/80 leading-relaxed text-sm md:text-base">一句無心的話 就能在心裡演成一場悲劇 過度思考讓你被雜訊淹沒 迷失了真實的事實</p>
                 </div>
                 <!-- 圖卡 03 -->
-                <div class="pain-card p-10 border border-transparent">
-                    <div class="illu-box">
+                <div class="pain-card p-8 sm:p-10 lg:p-12 border border-transparent flex flex-col items-start justify-start text-left">
+                    <div class="illu-box !justify-start">
                         <svg viewBox="0 0 100 100" class="h-full"><path d="M50 40 C50 30 65 30 65 45 C65 60 50 75 50 75 C50 75 35 60 35 45 C35 30 50 30 50 40" fill="#FDFBF7" stroke="#C4409D" stroke-width="2"/><path d="M10 50 Q30 45 40 55" fill="none" stroke="#B48A5A" stroke-width="2" stroke-linecap="round"/><path d="M90 50 Q70 55 60 45" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-black mb-4 leading-relaxed text-left">能量總是被他人<br>「惡意盜刷」？</h3>
-                    <p class="text-coffee/80 leading-loose text-left">習慣性承接別人的情緒，想拒絕卻充滿罪惡感，你的溫柔被情感勒索無止盡消耗，卻忘了留一點給自己</p>
+                    <h3 class="text-xl font-bold text-black mb-6 leading-snug">能量總是被他人<br>惡意盜刷</h3>
+                    <p class="text-coffee/80 leading-relaxed text-sm md:text-base">習慣性承接別人的情緒 想拒絕卻充滿罪惡感 你的溫柔被情感勒索 無止盡消耗 卻忘了留一點給自己</p>
                 </div>
                 <!-- 圖卡 04 -->
-                <div class="pain-card p-10 border border-transparent">
-                    <div class="illu-box">
-                        <svg viewBox="0 0 100 100" class="h-full"><path d="M50 30 L50 80 M35 45 L65 45" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="20" r="8" fill="none" stroke="currentColor" stroke-width="2"/><rect x="40" y="45" width="6" height="20" fill="#C4409D" opacity="0.4"/><rect x="54" y="45" width="6" height="20" fill="#C4409D" opacity="0.4"/><path d="M20 20 L30 30 M80 20 L70 30 M20 80 L30 70 M80 80 L70 70" stroke="#B48A5A" stroke-width="1.5"/></svg>
+                <div class="pain-card p-8 sm:p-10 lg:p-12 border border-transparent flex flex-col items-start justify-start text-left">
+                    <div class="illu-box !justify-start">
+                        <svg viewBox="0 0 100 100" class="h-full"><path d="M50 30 L50 80 M35 45 L65 45" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="20" r="8" fill="none" stroke="currentColor" stroke-width="2"/><rect x="40" y="45" width="6" height="20" fill="#C4409D" opacity="0.4"/><rect x="54" y="45" width="6" height="20" fill="#C4409D" opacity="0.4"/><path d="M20 20 L30 30 M80 20 L78 22 M50 10 L50 12 M10 50 L12 50" stroke="#B48A5A" stroke-width="1.5"/></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-black mb-4 leading-relaxed text-left">關鍵時刻總是<br>「慌亂僵掉」？</h3>
-                    <p class="text-coffee/80 leading-loose text-left">學了很多方法，但衝突發生的當下，大腦卻只剩下一片恐懼的空白，事後只有懊悔，氣自己為什麼沒反應</p>
+                    <h3 class="text-xl font-bold text-black mb-6 leading-snug">關鍵時刻總是<br>慌亂僵掉</h3>
+                    <p class="text-coffee/80 leading-relaxed text-sm md:text-base">學了很多方法 但衝突發生的當下 大腦卻只剩下　一片恐懼的空白 事後只有懊悔 氣自己為什麼沒反應</p>
                 </div>
             </div>
 
-            <div class="mt-20 text-center animate-fade">
+            <div class="mt-20 text-center animate-fade text-center mx-auto">
                 <p class="text-xl text-stone-500 serif-font italic max-w-2xl mx-auto leading-loose text-center">
-                    這不只是疲累，這是一種長期處於「逃命」狀態的生存模式 <br>
-                    為了求生，你是否正不自覺地逃避著原本屬於你的生活？
+                    這不只是疲累 這是一種長期處於「逃命」狀態的生存模式 <br>
+                    為了求生 你是否正不自覺地逃避著原本屬於你的生活
                 </p>
             </div>
         </div>
     </section>
 
-    <!-- Section: Transition Question -->
+    <!-- Section: Transition Question (修正文字縮小與單行排版) -->
     <section class="section-transition text-center">
-        <div class="max-w-4xl mx-auto space-y-12">
+        <div class="max-w-5xl mx-auto space-y-12 text-center">
             <div class="h-20 w-px bg-gradient-to-b from-dark-coffee/50 to-transparent mx-auto"></div>
-            <h2 class="text-3xl md:text-4xl font-medium text-black leading-relaxed serif-font tracking-[0.1em] animate-fade text-center">
-                如果，你的敏銳不再是需要被躲藏的弱點，<br>
-                而是能為你所用的精準導航？
+            <h2 class="text-xl md:text-2xl font-medium text-black leading-relaxed serif-font tracking-[0.1em] animate-fade text-center">
+                如果，你的敏銳不再是需要被躲藏的弱點 </br> 而是能為你所用的精準導航
             </h2>
-            <div class="py-12">
-                <p class="text-2xl md:text-3xl text-stone-500 italic serif-font tracking-widest opacity-80 leading-relaxed text-center">
-                    而讓你重構出一種<br>
-                    不需要隨時準備「逃命」的人生，那會是什麼樣子？
+            <div class="py-12 text-center">
+                <p class="text-lg md:text-xl text-stone-500 italic serif-font tracking-widest opacity-80 leading-relaxed text-center">
+                    而讓你重構出一種不需要隨時準備「逃命」的人生 </br> 那會是什麼樣子？
                 </p>
             </div>
             <div class="h-20 w-px bg-gradient-to-t from-brand-purple/50 to-transparent mx-auto"></div>
@@ -600,9 +604,9 @@
     <!-- Section: Transformation Vision -->
     <section class="section-vision py-32 px-6 text-left">
         <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-24 animate-fade">
+            <div class="text-center mb-24 animate-fade text-center mx-auto">
                 <h2 class="text-sm tracking-[0.4em] text-brand font-bold mb-6 uppercase serif-font text-center">Future State</h2>
-                <p class="text-3xl md:text-4xl font-bold text-black italic serif-font text-center">當作業系統更新後，你會迎來全新的生命風景</p>
+                <p class="text-3xl md:text-4xl font-bold text-black italic serif-font text-center">當作業系統更新後 你會迎來全新的生命風景</p>
             </div>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -611,35 +615,35 @@
                         <svg viewBox="0 0 100 100" class="h-full"><path d="M40 70 Q50 65 60 70 M45 65 C45 65 40 50 45 40 C50 30 60 30 65 40 C70 50 65 65 65 65" fill="none" stroke="currentColor" stroke-width="2"/><path d="M35 70 Q25 65 15 70 M30 65 C30 65 25 50 30 40 C35 30 45 30 50 40 C55 50 50 65 50 65" fill="none" stroke="var(--brand-purple)" stroke-width="2"/><circle cx="50" cy="25" r="10" fill="none" stroke="var(--brand-purple)" stroke-width="1.5" stroke-dasharray="2 2"/></svg>
                     </div>
                     <h3 class="text-xl font-bold text-black mb-6 serif-font text-left">自信地愛人與被愛</h3>
-                    <p class="text-coffee/80 leading-loose text-left">不再擔心敏感會「破壞」關係，你學會了穩住內在，擁有足夠的安全感去建立深層連結，讓溫柔成為滋養彼此的力量</p>
+                    <p class="text-coffee/80 leading-loose text-left text-sm md:text-base">不再擔心敏感會「破壞」關係 你學會了穩住內在 擁有足夠的安全感去建立深層連結 讓溫柔成為滋養彼此的力量</p>
                 </div>
                 <div class="vision-card p-10">
                     <div class="illu-box">
                         <svg viewBox="0 0 100 100" class="h-full"><path d="M50 80 L50 40 M30 60 L70 60" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="50" cy="30" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20 L22 22 M80 20 L78 22 M50 10 L50 12 M10 50 L12 50" stroke="var(--bronze-gold)" stroke-width="2" stroke-linecap="round"/><path d="M30 30 Q50 20 70 30" fill="none" stroke="var(--brand-purple)" stroke-width="1.5" opacity="0.5"/></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-black mb-6 serif-font text-left">專注於真正熱愛的工作</h3>
-                    <p class="text-coffee/80 leading-loose text-left">大腦雜訊被過濾，不再被情緒內耗癱瘓，能勇敢在職場中追求理想，將精準的直覺轉化為創造力</p>
+                    <h3 class="text-xl font-bold text-black mb-6 serif-font text-left text-left text-left">專注於真正熱愛的工作</h3>
+                    <p class="text-coffee/80 leading-loose text-left text-sm md:text-base">大腦雜訊被過濾 不再被情緒內耗癱瘓 能勇敢在職場中追求理想 將精準的直覺轉化為創造力</p>
                 </div>
-                <div class="vision-card p-10 lg:col-span-1 md:col-span-2 border border-transparent">
+                <div class="vision-card p-10 lg:col-span-1 border border-transparent">
                     <div class="illu-box">
                         <svg viewBox="0 0 100 100" class="h-full"><circle cx="50" cy="50" r="25" fill="none" stroke="var(--bronze-gold)" stroke-width="1" stroke-dasharray="4 4"/><path d="M50 20 C60 20 75 35 75 50 C75 65 60 80 50 80 C40 80 25 65 25 50 C25 35 40 20 50 20" fill="none" stroke="var(--brand-purple)" stroke-width="2.5"/><path d="M50 40 L50 60 M40 50 L60 50" stroke="currentColor" stroke-width="2"/></svg>
                     </div>
                     <h3 class="text-xl font-bold text-black mb-6 serif-font text-left">勇敢追尋理想的生活</h3>
-                    <p class="text-coffee/80 leading-loose text-left">看懂自己的能量地圖，你不再強迫自己適應外界，而是有底氣設計出順應特質的生活方案，活成那個發光的版本</p>
+                    <p class="text-coffee/80 leading-loose text-left text-sm md:text-base">看懂自己的能量地圖 你不再強迫自己適應外界 而是有底氣設計出順應特質的生活方案 活成那個發光的版本</p>
                 </div>
             </div>
 
-            <div class="mt-24 text-center space-y-12">
-                <div class="py-10">
+            <div class="mt-24 text-center space-y-12 mx-auto text-center text-center">
+                <div class="py-10 text-center">
                     <p class="text-2xl md:text-3xl text-stone-500 italic serif-font tracking-widest opacity-80 leading-relaxed text-center">
-                        這是不是你一直只敢放在心底一角，<br>
-                        而不敢拿來陽光下好好追尋的願望？
+                        這是不是你一直只敢放在心底一角 <br>
+                        而不敢拿來陽光下好好追尋的願望
                     </p>
                 </div>
-                <div class="space-y-6 text-center">
-                    <p class="text-2xl font-bold text-black serif-font italic text-center">「重構，是為了建立一個你再也不需要逃避的人生」</p>
+                <div class="space-y-6 text-center mx-auto text-center">
+                    <p class="text-2xl font-bold text-black serif-font italic text-center text-center">「重構 是為了建立一個你再也不需要逃避的人生」</p>
                     <p class="text-brand font-bold text-2xl md:text-3xl italic serif-font animate-fade text-center">
-                        這不是奇蹟，這是精密的工程提煉後的必然
+                        這不是奇蹟 這是精密的工程提煉後的必然
                     </p>
                 </div>
             </div>
@@ -649,42 +653,42 @@
     <!-- Section: Founder's Story -->
     <section id="story" class="py-32 px-6 bg-white overflow-hidden text-left">
         <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-20 animate-fade">
-                <h2 class="text-sm tracking-[0.3em] text-gold font-bold mb-4 uppercase text-black serif-font text-center">The Story behind</h2>
-                <p class="text-2xl md:text-3xl font-bold text-black italic serif-font text-center">我想讓你知道 <br> 我並不是一開始就能自在過著生活的人</p>
+            <div class="text-center mb-20 animate-fade mx-auto text-center text-center text-center">
+                <h2 class="text-sm tracking-[0.3em] text-gold font-bold mb-4 uppercase text-black serif-font text-center text-center">The Story behind</h2>
+                <p class="text-2xl md:text-3xl font-bold text-black italic serif-font text-center text-center text-center">我想讓你知道 <br> 我並不是一開始就能自在過著生活的人</p>
             </div>
             
-            <div class="grid md:grid-cols-12 gap-16 items-start mb-20">
-                <div class="md:col-span-5 relative z-10 md:sticky md:top-40 text-center">
-                    <div class="relative max-w-md mx-auto">
-                        <div class="absolute inset-0 bg-brand/5 rounded-[4rem] transform translate-x-4 translate-y-4 -z-10"></div>
-                        <div class="img-mask bg-stone-100 text-center">
-                            <img src="https://i.ibb.co/7xYGMYVh/Gemini-Generated-Image-wry5thwry5thwry5.png" alt="Scar Chen" class="w-full h-auto object-cover mx-auto">
+            <div class="grid md:grid-cols-12 gap-16 items-start mb-20 text-center text-center">
+                <div class="md:col-span-5 relative z-10 md:sticky md:top-40 text-center text-center">
+                    <div class="relative max-w-md mx-auto text-center text-center text-center">
+                        <div class="absolute inset-0 bg-brand/5 rounded-[4rem] transform translate-x-4 translate-y-4 -z-10 text-center text-center text-center"></div>
+                        <div class="img-mask bg-stone-100 text-center text-center text-center">
+                            <img src="https://i.ibb.co/7xYGMYVh/Gemini-Generated-Image-wry5thwry5thwry5.png" alt="Scar Chen" class="w-full h-auto object-cover mx-auto text-center text-center">
                         </div>
                     </div>
-                    <div class="text-center mt-10">
-                        <h3 class="text-2xl font-bold text-black mb-2 serif-font text-center">Scar Chen</h3>
-                        <p class="text-gold text-sm tracking-[0.2em] uppercase font-bold text-black text-center">PAUSE 重構工程創辦人</p>
+                    <div class="text-center mt-10 text-center text-center text-center">
+                        <h3 class="text-2xl font-bold text-black mb-2 serif-font text-center text-center text-center text-center">Scar Chen</h3>
+                        <p class="text-gold text-sm tracking-[0.2em] uppercase font-bold text-black text-center text-center text-center text-center">PAUSE 重構工程創辦人</p>
                     </div>
                 </div>
 
-                <div class="md:col-span-7 story-card p-10 md:p-16 rounded-[4rem] relative">
-                    <div class="absolute top-10 left-10 text-6xl text-gold/10 font-serif serif-font text-left">“</div>
-                    <div class="relative z-10 space-y-10 text-lg text-coffee leading-relaxed text-left">
+                <div class="md:col-span-7 story-card p-10 md:p-16 rounded-[4rem] relative text-left text-left text-left">
+                    <div class="absolute top-10 left-10 text-6xl text-gold/10 font-serif serif-font text-left text-left text-left">“</div>
+                    <div class="relative z-10 space-y-10 text-lg text-coffee leading-relaxed text-left text-left text-left">
                         <p>嗨 我是Scar <br> 我用了20年的時間 <br> 體驗高敏感如何讓我的生活變得很艱難</p>
                         <p>曾一度磨光了自信 也對自己充滿懷疑 <br> 直到我遇到我生命裡的轉機</p>
                         <p>它像是一片給我很多安定的能量的土壤 <br> 慢慢 慢慢 讓我有鬆下為了求生的緊繃神經 <br> 也慢慢 慢慢 讓我看到 原來人們其實可以生活得很自信 很chill</p>
-                        <div class="py-8 border-y border-stone-100 text-black font-medium text-xl serif-font text-left">
+                        <div class="py-8 border-y border-stone-100 text-black font-medium text-xl serif-font text-left text-left text-left">
                             我在不斷探問 假設 驗證的步驟下 <br> 一步步走向我曾經覺得自己此生無緣的 <br> 更舒服自在的生活樣貌
                         </div>
                         
-                        <div class="mt-8 text-left">
-                            <p class="text-lg text-coffee mb-4 text-left">我把這些年我做對的事回顧一遍又一遍 <br> 提煉出可以結構化、步驟化、複製的系統：</p>
+                        <div class="mt-8 text-left text-left text-left text-left">
+                            <p class="text-lg text-coffee mb-4 text-left text-left">我把這些年我做對的事回顧一遍又一遍 <br> 提煉出可以結構化、步驟化、複製的系統：</p>
                             
-                            <div class="pause-brand-box group text-left">
-                                <div class="pause-title-en text-left">P.A.U.S.E.</div>
-                                <div class="pause-title-cn text-left">重構工程系統</div>
-                                <div class="pause-underline text-left"></div>
+                            <div class="pause-brand-box group text-left text-left text-left">
+                                <div class="pause-title-en text-left text-left">P.A.U.S.E.</div>
+                                <div class="pause-title-cn text-left text-left text-left">重構工程系統</div>
+                                <div class="pause-underline text-left text-left"></div>
                             </div>
                         </div>
                     </div>
@@ -693,85 +697,85 @@
 
             <!-- PAUSE System Section -->
             <div id="system" class="mt-32 pt-32 border-t border-stone-100/50">
-                <div class="text-center mb-24">
-                    <p class="text-gold text-sm tracking-[0.3em] font-bold uppercase mb-4 italic text-black serif-font text-center">Reconstructing Sensitive Life</p>
-                    <h2 class="text-4xl font-bold italic text-brand text-black serif-font text-center">PAUSE 重構工程藍圖</h2>
+                <div class="text-center mb-24 mx-auto text-center text-center text-center">
+                    <p class="text-gold text-sm tracking-[0.3em] font-bold uppercase mb-4 italic text-black serif-font text-center text-center">Reconstructing Sensitive Life</p>
+                    <h2 class="text-4xl font-bold italic text-brand text-black serif-font text-center text-center text-center text-center">PAUSE 重構工程藍圖</h2>
                 </div>
 
-                <div class="grid lg:grid-cols-2 gap-24 items-start text-left">
-                    <div class="lg:sticky lg:top-40 py-10 text-center">
+                <div class="grid lg:grid-cols-2 gap-24 items-start text-left text-left">
+                    <div class="lg:sticky lg:top-40 py-10 text-center text-center mx-auto text-center">
                         <div class="pause-container">
                             <div class="pause-circle-wrap"></div>
                             <div class="center-label">
-                                <div class="text-[10px] text-gold font-bold tracking-widest mb-1 uppercase text-black text-center">Center</div>
-                                <div class="text-2xl font-bold text-black italic serif-font text-center">主導位</div>
+                                <div class="text-[10px] text-gold font-bold tracking-widest mb-1 uppercase text-black text-center text-center">Center</div>
+                                <div class="text-2xl font-bold text-black italic serif-font text-center text-center text-center text-center text-center">主導位</div>
                             </div>
-                            <a href="#step-p" class="pause-item p-pos"><span class="text-4xl font-bold text-brand serif-font text-center">P</span><span class="text-[10px] font-bold text-black uppercase text-black text-center">看懂</span></a>
-                            <a href="#step-a" class="pause-item a-pos"><span class="text-4xl font-bold text-brand serif-font text-center">A</span><span class="text-[10px] font-bold text-black uppercase text-black text-center">擁抱</span></a>
-                            <a href="#step-u" class="pause-item u-pos"><span class="text-4xl font-bold text-brand serif-font text-center">U</span><span class="text-[10px] font-bold text-black uppercase text-black text-center">調和</span></a>
-                            <a href="#step-s" class="pause-item s-pos"><span class="text-4xl font-bold text-brand serif-font text-center">S</span><span class="text-[10px] font-bold text-black uppercase text-black text-center">轉向</span></a>
-                            <a href="#step-e" class="pause-item e-pos"><span class="text-4xl font-bold text-brand serif-font text-center">E</span><span class="text-[10px] font-bold text-black uppercase text-black text-center">釋出</span></a>
+                            <a href="#step-p" class="pause-item p-pos"><span class="text-4xl font-bold text-brand serif-font">P</span><span class="text-[10px] font-bold text-black uppercase text-black">看懂</span></a>
+                            <a href="#step-a" class="pause-item a-pos"><span class="text-4xl font-bold text-brand serif-font">A</span><span class="text-[10px] font-bold text-black uppercase text-black">擁抱</span></a>
+                            <a href="#step-u" class="pause-item u-pos"><span class="text-4xl font-bold text-brand serif-font">U</span><span class="text-[10px] font-bold text-black uppercase text-black">調和</span></a>
+                            <a href="#step-s" class="pause-item s-pos"><span class="text-4xl font-bold text-brand serif-font">S</span><span class="text-[10px] font-bold text-black uppercase text-black">轉向</span></a>
+                            <a href="#step-e" class="pause-item e-pos"><span class="text-4xl font-bold text-brand serif-font">E</span><span class="text-[10px] font-bold text-black uppercase text-black">釋出</span></a>
                         </div>
                     </div>
 
                     <div class="space-y-12">
-                        <div id="step-p" class="group p-8 bg-white rounded-3xl border border-stone-100 shadow-sm transition hover:shadow-md text-left">
-                            <span class="step-card-num text-left">PHASE 01 / PERCEIVE</span>
-                            <h3 class="font-bold text-2xl mb-6 text-black flex items-center gap-4 serif-font text-left">
-                                <span class="text-brand text-left">P</span> 看懂：聽懂身體的求救訊號
+                        <div id="step-p" class="group p-8 bg-white rounded-3xl border border-stone-100 shadow-sm transition hover:shadow-md text-left text-left">
+                            <span class="step-card-num text-left text-left text-left text-left">PHASE 01 / PERCEIVE</span>
+                            <h3 class="font-bold text-2xl mb-6 text-black flex items-center gap-4 serif-font text-left text-left">
+                                <span class="text-brand">P</span> 看懂：聽懂身體的求救訊號
                             </h3>
-                            <div class="space-y-4 text-coffee leading-relaxed text-left">
-                                <p>發現自己明明「什麼都沒做」卻電力見底，那種不明原因的累讓你對生活失去動力時，你是不是很希望看透這份「感測力」是如何在背後超額損耗？</p>
-                                <p>這個步驟就是安裝專屬的<span class="text-brand font-bold underline decoration-brand/30">【情緒儀表板】</span>，在火花演變成火災前，精準收回被誤用的能量</p>
-                                <div class="text-gold font-bold text-lg pt-2 serif-font text-left">★ 收穫：終止無效能耗，找回深層安全感</div>
+                            <div class="space-y-4 text-coffee leading-relaxed text-left text-left">
+                                <p>發現自己明明「什麼都沒做」卻電力見底 那種不明原因的累讓你對生活失去動力時 你是不是很希望看透這份「感測力」是如何在背後超額損耗</p>
+                                <p>這個步驟就是安裝專屬的<span class="text-brand font-bold underline decoration-brand/30">【情緒儀表板】</span> 在火花演變成火災前 精準收回被誤用的能量</p>
+                                <div class="text-gold font-bold text-lg pt-2 serif-font text-left text-left text-left text-left text-left">★ 收穫：終止無效能耗 找回深層安全感</div>
                             </div>
                         </div>
 
-                        <div id="step-a" class="group p-8 bg-white rounded-3xl border border-stone-100 shadow-sm transition hover:shadow-md text-left">
-                            <span class="step-card-num text-left">PHASE 02 / ACCEPT</span>
-                            <h3 class="font-bold text-2xl mb-6 text-black flex items-center gap-4 serif-font text-left">
-                                <span class="text-brand text-left">A</span> 擁抱：建立心理緩衝區
+                        <div id="step-a" class="group p-8 bg-white rounded-3xl border border-stone-100 shadow-sm transition hover:shadow-md text-left text-left text-left text-left">
+                            <span class="step-card-num text-left text-left text-left text-left">PHASE 02 / ACCEPT</span>
+                            <h3 class="font-bold text-2xl mb-6 text-black flex items-center gap-4 serif-font text-left text-left text-left text-left">
+                                <span class="text-brand">A</span> 擁抱：建立心理緩衝區
                             </h3>
-                            <div class="space-y-4 text-coffee leading-relaxed text-left">
-                                <p>每當情緒風暴突如其來、讓你僵在原地無法動彈時，你是不是很希望手中握有一個能「立刻斷電」的開關，讓自己瞬間回穩？</p>
-                                <p>這個步驟就是啟動內在的<span class="text-brand font-bold underline decoration-brand/30">【當下截斷機制】</span>，學會看著情緒下雨而不必親自淋雨，在混亂中穩穩接住自己</p>
-                                <div class="text-gold font-bold text-lg pt-2 serif-font text-left">★ 收穫：掌握冷卻技術，不再被情緒主導人生</div>
+                            <div class="space-y-4 text-coffee leading-relaxed text-left text-left text-left">
+                                <p>每當情緒風暴突如其來、讓你僵在原地無法動彈時 你是不是很希望手中握有一個能「立刻斷電」的開關 讓自己瞬間回穩</p>
+                                <p>這個步驟就是啟動內在的<span class="text-brand font-bold underline decoration-brand/30">【當下截斷機制】</span> 學會看著情緒下雨而不必親自淋雨 在混亂中穩穩接住自己</p>
+                                <div class="text-gold font-bold text-lg pt-2 serif-font text-left text-left text-left text-left text-left text-left text-left">★ 收穫：掌握冷卻技術 不再被情緒主導人生</div>
                             </div>
                         </div>
 
-                        <div id="step-u" class="group p-8 bg-white rounded-3xl border border-stone-100 shadow-sm transition hover:shadow-md text-left">
-                            <span class="step-card-num text-left">PHASE 03 / UNIFY</span>
-                            <h3 class="font-bold text-2xl mb-6 text-black flex items-center gap-4 serif-font text-left">
-                                <span class="text-brand text-left">U</span> 調和：大腦回歸清爽安靜
+                        <div id="step-u" class="group p-8 bg-white rounded-3xl border border-stone-100 shadow-sm transition hover:shadow-md text-left text-left text-left text-left">
+                            <span class="step-card-num text-left text-left text-left text-left text-left text-left">PHASE 03 / UNIFY</span>
+                            <h3 class="font-bold text-2xl mb-6 text-black flex items-center gap-4 serif-font text-left text-left text-left text-left text-left">
+                                <span class="text-brand">U</span> 調和：大腦回歸清爽安靜
                             </h3>
-                            <div class="space-y-4 text-coffee leading-relaxed text-left">
-                                <p>每當腦袋開始上演停不下來、無比真實的災難小劇場時，你是不是很希望具備「一秒識破腦補事實」的濾鏡，終止無謂的焦慮？</p>
-                                <p>這個步驟就是簽署<span class="text-brand font-bold underline decoration-brand/30">【內在和平協議】</span>，建立一套區分事實與想像的過濾系統，將內耗能量轉化為行動力</p>
-                                <div class="text-gold font-bold text-lg pt-2 serif-font text-left">★ 收穫：清空大腦雜訊，重奪思考的主控權</div>
+                            <div class="space-y-4 text-coffee leading-relaxed text-left text-left text-left text-left text-left">
+                                <p>每當腦袋開始上演停不下來、無比真實的災難小劇場時 你是不是很希望具備「一秒識破腦補事實」的濾鏡 終止無謂的焦慮</p>
+                                <p>這個步驟就是簽署<span class="text-brand font-bold underline decoration-brand/30">【內在和平協議】</span> 建立一套區分事實與想像的過濾系統 將內耗能量轉化為行動力</p>
+                                <div class="text-gold font-bold text-lg pt-2 serif-font text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">★ 收穫：清空大腦雜訊 重奪思考的主控權</div>
                             </div>
                         </div>
 
-                        <div id="step-s" class="group p-8 bg-white rounded-3xl border border-stone-100 shadow-sm transition hover:shadow-md text-left">
-                            <span class="step-card-num text-left">PHASE 04 / SHIFT</span>
-                            <h3 class="font-bold text-2xl mb-6 text-black flex items-center gap-4 serif-font text-left">
-                                <span class="text-brand text-left">S</span> 轉向：安裝能量防火牆
+                        <div id="step-s" class="group p-8 bg-white rounded-3xl border border-stone-100 shadow-sm transition hover:shadow-md text-left text-left text-left text-left text-left text-left">
+                            <span class="step-card-num text-left text-left text-left text-left text-left text-left text-left text-left">PHASE 04 / SHIFT</span>
+                            <h3 class="font-bold text-2xl mb-6 text-black flex items-center gap-4 serif-font text-left text-left text-left text-left text-left text-left">
+                                <span class="text-brand">S</span> 轉向：安裝能量防火牆
                             </h3>
-                            <div class="space-y-4 text-coffee leading-relaxed text-left">
-                                <p>每當你感到別人的情緒正在強行入侵、試圖「盜刷」你的能量時，你是不是很希望有一套系統，能優雅地劃清界線而不必背負罪惡感？</p>
-                                <p>這個步驟就是執行<span class="text-brand font-bold underline decoration-brand/30">【能量止付計畫】</span>，學習精確識別責任與情緒的邊界，卸下他人的重擔，守護內在的溫柔</p>
-                                <div class="text-gold font-bold text-lg pt-2 serif-font text-left">★ 收穫：建立優雅邊界，停止能量的無端損耗</div>
+                            <div class="space-y-4 text-coffee leading-relaxed text-left text-left text-left text-left text-left text-left text-left text-left">
+                                <p>每當你感到別人的情緒正在強行入侵、試圖「盜刷」你的能量時 你是不是很希望有一套系統 能優雅地劃清界線而不必背負罪惡感</p>
+                                <p>這個步驟就是執行<span class="text-brand font-bold underline decoration-brand/30">【能量止付計畫】</span> 學習精確識別責任與情緒的邊界 卸下他人的重擔 守護內在的溫柔</p>
+                                <div class="text-gold font-bold text-lg pt-2 serif-font text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">★ 收穫：建立優雅邊界 停止能量的無端損耗</div>
                             </div>
                         </div>
 
-                        <div id="step-e" class="group p-8 bg-white rounded-3xl border border-stone-100 shadow-sm transition hover:shadow-md text-left">
-                            <span class="step-card-num text-left">PHASE 05 / EASE</span>
-                            <h3 class="font-bold text-2xl mb-6 text-black flex items-center gap-4 serif-font text-left">
-                                <span class="text-brand text-left">E</span> 釋出：顯化你的發光版本
+                        <div id="step-e" class="group p-8 bg-white rounded-3xl border border-stone-100 shadow-sm transition hover:shadow-md text-left text-left text-left text-left">
+                            <span class="step-card-num text-left text-left text-left text-left text-left">PHASE 05 / EASE</span>
+                            <h3 class="font-bold text-2xl mb-6 text-black flex items-center gap-4 serif-font text-left text-left text-left text-left text-left">
+                                <span class="text-brand">E</span> 釋出：顯化你的發光版本
                             </h3>
-                            <div class="space-y-4 text-coffee leading-relaxed text-left">
-                                <p>每當你下意識想轉身「逃離」人群、甚至躲進角落才能感到安全時，你是不是很希望擁有一份穩坐在原地、不再感到受威脅的心理餘裕？</p>
-                                <p>這個步驟就是啟動<span class="text-brand font-bold underline decoration-brand/30">【天賦顯化工程】</span>，透過極低阻力的整合，讓你不再需要逃避特質，而是能帶著自信與餘裕，活成那個發光的版本</p>
-                                <div class="text-gold font-bold text-lg pt-2 serif-font text-left">★ 收穫：終止逃避循環，將敏感轉化為人生主導權</div>
+                            <div class="space-y-4 text-coffee leading-relaxed text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">
+                                <p>每當你下意識想轉身「逃離」人群、甚至躲進角落才能感到安全時 你是不是很希望擁有一份穩坐在原地、不再感到受威脅的心理餘裕</p>
+                                <p>這個步驟就是啟動<span class="text-brand font-bold underline decoration-brand/30">【天賦顯化工程】</span> 透過極低阻力的整合 讓你不再需要逃避特質 而是能帶著自信與餘裕 活成那個發光的版本</p>
+                                <div class="text-gold font-bold text-lg pt-2 serif-font text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">★ 收穫：終止逃避循環 將敏感轉化為人生主導權</div>
                             </div>
                         </div>
                     </div>
@@ -781,97 +785,130 @@
     </section>
 
     <!-- Section: Scalpels -->
-    <section id="scalpels" class="py-32 px-6 bg-cream border-t border-stone-100 text-left">
-        <div class="max-w-5xl mx-auto">
-            <!-- 猶豫段落的響應式優化 -->
-            <div class="max-w-4xl mx-auto text-center mb-24 space-y-10 md:space-y-12 animate-fade">
-                <div class="space-y-8 md:space-y-10 serif-font text-lg md:text-xl text-coffee leading-relaxed md:leading-loose text-center">
-                    <p class="px-4 md:px-0">看到這邊 你可能還有點猶豫</p>
-                    <p class="px-4 md:px-0 text-stone-500 font-light">因為你知道自己已經看了很多書、報過很多課，每次都覺得：</p>
+    <section id="scalpels" class="py-32 px-6 bg-cream border-t border-stone-100 text-center">
+        <div class="max-w-5xl mx-auto text-center text-center">
+            <div class="max-w-xl mx-auto text-center mb-24 space-y-12 md:space-y-16 animate-fade text-center text-center">
+                <div class="serif-font text-lg md:text-xl text-coffee leading-relaxed md:leading-loose flex flex-col items-center text-center text-center">
                     
-                    <div class="relative inline-block px-6 md:px-8 py-4 md:py-5 bg-white/70 rounded-2xl md:rounded-3xl shadow-sm border border-stone-100 max-w-sm md:max-w-none mx-auto">
-                        <span class="text-black font-bold text-xl md:text-2xl italic leading-snug">「這次真的不一樣了，這是最後一次困在這掙扎了！」</span>
+                    <div class="mb-8 space-y-2 text-center text-center text-center">
+                        <p>看到這邊</p>
+                        <p>你可能還有點猶豫</p>
                     </div>
 
-                    <p class="px-4 md:px-0 mt-8">但每次覺得自己有進步、或是情況稍微好轉時 <br class="hidden md:block">
-                    好景總像泡泡一樣，維持不了多久又退回原點</p>
-                    <p class="text-xl md:text-2xl font-medium text-black px-4 text-center">這種循環 讓你感到很折磨對吧？</p>
-                    <p class="px-4 md:px-0 text-center">我明白 因為我也曾深陷其中而跌跌撞撞好久...</p>
-                    
-                    <div class="py-4 text-center mx-auto">
-                        <span class="affirmation-marker text-xl md:text-2xl text-black font-bold px-2 inline-block">但之所以學了很多 代表你很堅定想要克服困境</span>
+                    <div class="mb-10 space-y-2 text-stone-500 font-light text-center text-center text-center">
+                        <p>因為你知道自己</p>
+                        <p>已經看了很多書 報過很多課</p>
+                        <p>每次心裡都覺得</p>
                     </div>
                     
-                    <p class="px-4 md:px-0 text-center">而如果想要達成「與實踐零距離」目標...</p>
-                    <p class="text-brand font-bold italic text-2xl md:text-3xl px-4 text-center">你需要的是非常直覺、且阻力極低的練習操作！</p>
+                    <div class="relative px-6 py-5 md:px-10 md:py-6 bg-white/70 rounded-2xl md:rounded-3xl shadow-sm border border-stone-100 max-w-[280px] md:max-w-none mb-10 text-center text-center text-center">
+                        <span class="text-black font-bold text-lg md:text-2xl italic leading-relaxed text-center text-center text-center">
+                            「這次真的不一樣了 <br class="md:hidden"> 這是最後一次困在這掙扎了」
+                        </span>
+                    </div>
+
+                    <div class="mb-10 space-y-2 text-center text-center text-center text-center">
+                        <p>但每次覺得自己有進步</p>
+                        <p>或是情況稍微好轉時</p>
+                        <p>好景總像泡泡一樣</p>
+                        <p>維持不了多久又退回原點</p>
+                    </div>
+
+                    <div class="mb-10 text-center px-4 text-center text-center text-center">
+                        <p class="text-xl md:text-2xl font-medium text-black text-center text-center">這種循環</p>
+                        <p class="text-xl md:text-2xl font-medium text-black text-center text-center">讓你感到很折磨對吧</p>
+                    </div>
+
+                    <div class="mb-8 space-y-2 text-center text-center text-center text-center">
+                        <p>我明白</p>
+                        <p>因為我也曾深陷其中</p>
+                        <p>跌跌撞撞了許久</p>
+                    </div>
+                    
+                    <div class="py-6 text-center text-center text-center text-center">
+                        <span class="affirmation-marker text-lg md:text-2xl text-black font-bold px-2 inline-block text-center text-center">
+                            之所以學了很多 <br class="md:hidden"> 代表你很堅定想要克服困境
+                        </span>
+                    </div>
+                    
+                    <div class="mt-8 space-y-2 text-center text-center text-center text-center">
+                        <p>而如果想要達成</p>
+                        <p>「與實踐零距離」的目標</p>
+                    </div>
+
+                    <div class="mt-8 text-center text-center text-center text-center">
+                        <p class="text-brand font-bold italic text-xl md:text-3xl px-4 text-center text-center text-center">
+                            你需要的是非常直覺 <br class="md:hidden"> 且阻力極低的練習操作
+                        </p>
+                    </div>
                 </div>
 
-                <div class="py-12 md:py-16 border-y border-stone-200/50">
-                    <p class="text-2xl md:text-3xl font-bold text-black italic serif-font leading-tight mb-16 px-4 text-center">
-                        這就是為什麼我最後提煉出 <br class="md:hidden"> 專為高敏人設計的 <span class="text-brand text-3xl md:text-4xl block md:inline mt-4 md:mt-0">3 把情緒手術刀</span>
+                <div class="py-12 md:py-16 border-y border-stone-200/50 text-center text-center text-center text-center">
+                    <p class="text-2xl md:text-3xl font-bold text-black italic serif-font leading-tight mb-16 text-center mx-auto text-center text-center text-center">
+                        這就是為什麼我最後提煉出 <br class="md:hidden"> 專為高敏人設計的 <span class="text-brand text-3xl md:text-4xl block md:inline mt-4 md:mt-0 text-center text-center text-center text-center">3 把情緒手術刀</span>
                     </p>
                     
-                    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16 text-left px-4">
-                        <div class="p-8 bg-white/60 rounded-3xl border border-stone-100 shadow-sm flex flex-col justify-center">
-                            <div class="flex items-center gap-3 mb-3">
-                                <span class="text-gold"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.487V6a2 2 0 011.106-1.789l6.522-3.261a2 2 0 011.744 0l6.522 3.261A2 2 0 0121 6v9.487a2 2 0 01-1.106 1.789L15 20l-3 1.5-3-1.5z"/></svg></span>
-                                <span class="text-[10px] font-bold tracking-widest text-gold uppercase italic text-left">The Blueprint</span>
+                    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16 text-left px-4 text-left text-left text-left text-left">
+                        <div class="p-8 bg-white/60 rounded-3xl border border-stone-100 shadow-sm flex flex-col justify-center text-left text-left text-left text-left">
+                            <div class="flex items-center gap-3 mb-3 text-left text-left text-left text-left text-left">
+                                <span class="text-gold text-left text-left text-left text-left"><svg class="w-5 h-5 text-left text-left text-left text-left" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.487V6a2 2 0 011.106-1.789l6.522-3.261a2 2 0 011.744 0l6.522 3.261A2 2 0 0121 6v9.487a2 2 0 01-1.106 1.789L15 20l-3 1.5-3-1.5z"/></svg></span>
+                                <span class="text-[10px] font-bold tracking-widest text-gold uppercase italic text-left text-left text-left text-left text-left">The Blueprint</span>
                             </div>
-                            <h5 class="text-xl font-bold text-black serif-font mb-2 text-left">PAUSE 系統</h5>
-                            <p class="text-stone-500 font-light text-base leading-relaxed text-left">這是為你繪製的重構工程藍圖，明確了怎麼做、去哪裡</p>
+                            <h5 class="text-xl font-bold text-black serif-font mb-2 text-left text-left text-left text-left text-left">PAUSE 系統</h5>
+                            <p class="text-stone-500 font-light text-base leading-relaxed text-left text-left text-left text-left text-left text-left text-left">這是為你繪製的重構工程藍圖 明確了怎麼做、去哪裡</p>
                         </div>
                         
-                        <div class="p-8 bg-white/60 rounded-3xl border border-stone-100 shadow-sm flex flex-col justify-center">
-                            <div class="flex items-center gap-3 mb-3">
-                                <span class="text-brand"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></span>
-                                <span class="text-[10px] font-bold tracking-widest text-brand uppercase italic text-left">The Engine</span>
+                        <div class="p-8 bg-white/60 rounded-3xl border border-stone-100 shadow-sm flex flex-col justify-center text-left text-left text-left text-left text-left text-left">
+                            <div class="flex items-center gap-3 mb-3 text-left text-left text-left text-left text-left text-left text-left">
+                                <span class="text-brand text-left text-left text-left text-left text-left text-left"><svg class="w-5 h-5 text-left text-left text-left text-left text-left text-left" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></span>
+                                <span class="text-[10px] font-bold tracking-widest text-brand uppercase italic text-left text-left text-left text-left text-left text-left text-left">The Engine</span>
                             </div>
-                            <h5 class="text-xl font-bold text-black serif-font mb-2 text-left">3 把手術刀</h5>
-                            <p class="text-stone-500 font-light text-base leading-relaxed text-left">這是核心實踐引擎，是我們切開混亂、穩定航向目的地的工具</p>
+                            <h5 class="text-xl font-bold text-black serif-font mb-2 text-left text-left text-left text-left text-left text-left text-left text-left">3 把手術刀</h5>
+                            <p class="text-stone-500 font-light text-base leading-relaxed text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">這是核心實踐引擎 是我們切開混亂、穩定航向目的地的工具</p>
                         </div>
                     </div>
 
-                    <p class="text-xl md:text-2xl serif-font leading-relaxed max-w-3xl mx-auto mb-6 px-4 text-center">
-                        這是第一套直接縫合高敏人 <br class="md:hidden"> 
+                    <p class="text-xl md:text-2xl serif-font leading-relaxed max-w-3xl mx-auto mb-6 px-4 text-center mx-auto text-center text-center text-center text-center">
+                        這是第一套直接縫合高敏人 <br class="md:hidden text-center mx-auto text-center text-center text-center text-center text-center"> 
                         「學會」與「做到」中間距離的
                     </p>
-                    <div class="key-tool-highlight mx-auto">
-                        <span class="text-2xl md:text-3xl serif-font tracking-widest text-center">關鍵實踐工具</span>
+                    <div class="key-tool-highlight mx-auto text-center mx-auto text-center text-center text-center text-center">
+                        <span class="text-2xl md:text-3xl serif-font tracking-widest text-center text-center text-center text-center text-center text-center text-center">關鍵實踐工具</span>
                     </div>
                 </div>
 
-                <div class="pt-16">
-                    <h2 class="text-3xl md:text-5xl font-bold text-black italic serif-font leading-[1.8] tracking-wide text-center">
-                        究竟是哪 3 把 <span class="text-brand px-3 underline decoration-gold/40 decoration-4 underline-offset-[14px] inline-block">至關核心</span> 的工具 <br> 
-                        <span class="inline-block mt-6">能幫你縫合「知」與「行」的鴻溝？</span>
+                <div class="pt-16 text-center mx-auto text-center text-center text-center text-center">
+                    <h2 class="text-3xl md:text-5xl font-bold text-black italic serif-font leading-[1.8] tracking-wide text-center text-center text-center text-center text-center">
+                        究竟是哪 3 把 <span class="text-brand px-3 underline decoration-gold/40 decoration-4 underline-offset-[14px] inline-block text-center text-center">至關核心</span> 的工具 <br> 
+                        <span class="inline-block mt-6 text-center text-center text-center">能幫你縫合「知」與「行」的鴻溝</span>
                     </h2>
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-10 text-left">
-                <div class="p-12 rounded-[3.5rem] bg-white border border-stone-100 flex flex-col items-start group hover:shadow-2xl transition-all duration-500 text-left">
-                    <span class="scalpel-tag text-left">01 / TIME CUT</span>
-                    <div class="illu-box">
-                        <svg viewBox="0 0 100 100" class="h-full"><circle cx="50" cy="50" r="40" fill="none" stroke="#E8E5E0" stroke-width="1" stroke-dasharray="4 4"/><path d="M50 20 V50 L70 65" fill="none" stroke="#B48A5A" stroke-width="2" stroke-linecap="round"/><path d="M10 50 L90 50" stroke="#C4409D" stroke-width="4" stroke-linecap="round" opacity="0.9"/><path d="M50 10 L50 90" stroke="var(--brand-purple)" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.3"/></svg>
+            <div class="grid md:grid-cols-3 gap-10 text-left mt-16 text-left text-left text-left">
+                <div class="p-12 rounded-[3.5rem] bg-white border border-stone-100 flex flex-col items-start group hover:shadow-2xl transition-all duration-500 text-left text-left text-left text-left">
+                    <span class="scalpel-tag text-left text-left text-left text-left text-left">01 / TIME CUT</span>
+                    <div class="illu-box text-left text-left text-left">
+                        <svg viewBox="0 0 100 100" class="h-full text-left text-left text-left text-left text-left"><circle cx="50" cy="50" r="40" fill="none" stroke="#E8E5E0" stroke-width="1" stroke-dasharray="4 4"/><path d="M50 20 V50 L70 65" fill="none" stroke="#B48A5A" stroke-width="2" stroke-linecap="round"/><path d="M10 50 L90 50" stroke="#C4409D" stroke-width="4" stroke-linecap="round" opacity="0.9"/><path d="M50 10 L50 90" stroke="var(--brand-purple)" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.3"/></svg>
                     </div>
-                    <h4 class="text-2xl font-bold mb-6 text-black serif-font flex items-center gap-2 text-left"><span class="text-xs border border-stone-200 px-2 py-1 rounded text-stone-400 font-mono">IF</span> 切時間</h4>
-                    <p class="text-base text-coffee px-4 text-left">終止「未來」對「現在」的恐怖攻擊 <br> 透過瞬間截斷機制，讓大腦從焦慮循環中強行跳脫，只守住此刻的平安</p>
+                    <h4 class="text-2xl font-bold mb-6 text-black serif-font flex items-center gap-2 text-left text-left text-left text-left text-left text-left text-left text-left"><span class="text-xs border border-stone-200 px-2 py-1 rounded text-stone-400 font-mono text-left text-left">IF</span> 切時間</h4>
+                    <p class="text-base text-coffee px-4 text-left text-left text-left">終止「未來」對「現在」的恐怖攻擊 <br> 透過瞬間截斷機制 讓大腦從焦慮循環中強行跳脫 只守住此刻的平安</p>
                 </div>
-                <div class="p-12 rounded-[3.5rem] bg-white border border-stone-100 flex flex-col items-start group hover:shadow-2xl transition-all duration-500 text-left">
-                    <span class="scalpel-tag text-left">02 / REALITY CHECK</span>
-                    <div class="illu-box">
-                        <svg viewBox="0 0 100 100" class="h-full"><path d="M20 40 Q40 20 60 45 T90 50" fill="none" stroke="#E8E5E0" stroke-width="2" stroke-dasharray="3 3"/><path d="M25 60 Q45 80 65 55 T85 50" fill="none" stroke="#E8E5E0" stroke-width="2" stroke-dasharray="3 3"/><rect x="42" y="42" width="16" height="16" fill="none" stroke="#C4409D" stroke-width="2.5" transform="rotate(45 50 50)"/><path d="M30 70 L70 30" stroke="#B48A5A" stroke-width="4" stroke-linecap="round"/></svg>
+                <div class="p-12 rounded-[3.5rem] bg-white border border-stone-100 flex flex-col items-start group hover:shadow-2xl transition-all duration-500 text-left text-left text-left text-left text-left text-left">
+                    <span class="scalpel-tag text-left text-left text-left text-left text-left text-left text-left">02 / REALITY CHECK</span>
+                    <div class="illu-box text-left text-left text-left text-left">
+                        <svg viewBox="0 0 100 100" class="h-full text-left text-left text-left text-left text-left text-left text-left"><path d="M20 40 Q40 20 60 45 T90 50" fill="none" stroke="#E8E5E0" stroke-width="2" stroke-dasharray="3 3"/><path d="M25 60 Q45 80 65 55 T85 50" fill="none" stroke="#E8E5E0" stroke-width="2" stroke-dasharray="3 3"/><rect x="42" y="42" width="16" height="16" fill="none" stroke="#C4409D" stroke-width="2.5" transform="rotate(45 50 50)"/><path d="M30 70 L70 30" stroke="#B48A5A" stroke-width="4" stroke-linecap="round"/></svg>
                     </div>
-                    <h4 class="text-2xl font-bold mb-6 text-black serif-font flex items-center gap-2 text-left"><span class="text-xs border border-stone-200 px-2 py-1 rounded text-stone-400 font-mono">AND</span> 分真假</h4>
-                    <p class="text-base text-coffee px-4 text-left">關掉腦袋自帶的「災難特效鏡頭」 <br> 練習一秒撥開情緒迷霧，只看見真實發生的物理事實，讓想像力的能耗直接歸零</p>
+                    <h4 class="text-2xl font-bold mb-6 text-black serif-font flex items-center gap-2 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><span class="text-xs border border-stone-200 px-2 py-1 rounded text-stone-400 font-mono text-left text-left text-left">AND</span> 分真假</h4>
+                    <p class="text-base text-coffee px-4 text-left text-left text-left text-left">關掉腦袋自帶的「災難特效鏡頭」 <br> 練習一秒撥開情緒迷霧 只看見真實發生的物理事實 讓想像力的能耗直接歸零</p>
                 </div>
-                <div class="p-12 rounded-[3.5rem] bg-white border border-stone-100 flex flex-col items-start group hover:shadow-2xl transition-all duration-500 text-left">
-                    <span class="scalpel-tag text-left">03 / CONTROL BOUNDARY</span>
-                    <div class="illu-box">
-                        <svg viewBox="0 0 100 100" class="h-full"><circle cx="50" cy="50" r="18" fill="#FDF5FC" stroke="#C4409D" stroke-width="2.5"/><circle cx="50" cy="50" r="38" fill="none" stroke="#B48A5A" stroke-width="1.5" stroke-dasharray="8 4"/><path d="M15 15 L35 35 M85 15 L65 65 M15 85 L35 65 M85 85 L65 35" stroke="#E8E5E0" stroke-width="2" opacity="0.5"/></svg>
+                <div class="p-12 rounded-[3.5rem] bg-white border border-stone-100 flex flex-col items-start group hover:shadow-2xl transition-all duration-500 text-left text-left text-left text-left text-left text-left text-left">
+                    <span class="scalpel-tag text-left text-left text-left text-left text-left text-left text-left text-left text-left">03 / CONTROL BOUNDARY</span>
+                    <div class="illu-box text-left text-left text-left text-left text-left">
+                        <svg viewBox="0 0 100 100" class="h-full text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><circle cx="50" cy="50" r="18" fill="#FDF5FC" stroke="#C4409D" stroke-width="2.5"/><circle cx="50" cy="50" r="38" fill="none" stroke="#B48A5A" stroke-width="1.5" stroke-dasharray="8 4"/><path d="M15 15 L35 35 M85 15 L65 65 M15 85 L35 65 M85 85 L65 35" stroke="#E8E5E0" stroke-width="2" opacity="0.5"/></svg>
                     </div>
-                    <h4 class="text-2xl font-bold mb-6 text-black serif-font flex items-center gap-2 text-left"><span class="text-xs border border-stone-200 px-2 py-1 rounded text-stone-400 font-mono">THEN</span> 辨可控</h4>
-                    <p class="text-base text-coffee px-4 text-left">這是對他人的溫柔，也是對自己的慈悲 <br> 精準識別「他的情緒、他的責任」，優雅地拒絕盜刷能量，活回自己的人生</p>
+                    <h4 class="text-2xl font-bold mb-6 text-black serif-font flex items-center gap-2 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><span class="text-xs border border-stone-200 px-2 py-1 rounded text-stone-400 font-mono text-left text-left text-left text-left text-left">THEN</span> 辨可控</h4>
+                    <p class="text-base text-coffee px-4 text-left text-left text-left text-left text-left text-left">這是對他人的溫柔 也是對自己的慈悲 <br> 精準識別「他的情緒、他的責任」 優雅地拒絕盜刷能量 活回自己的人生</p>
                 </div>
             </div>
         </div>
@@ -879,134 +916,134 @@
 
     <!-- Section: Flow Chart Summary -->
     <section id="flow-summary" class="py-32 px-6 bg-white text-left">
-        <div class="max-w-6xl mx-auto">
-            <div class="max-w-4xl mx-auto text-center mb-24 space-y-10 animate-fade text-center">
-                <p class="text-2xl md:text-3xl serif-font text-coffee leading-loose text-center">
+        <div class="max-w-6xl mx-auto text-center text-center text-center">
+            <div class="max-w-4xl mx-auto text-center mb-24 space-y-10 animate-fade text-center mx-auto text-center text-center text-center">
+                <p class="text-2xl md:text-3xl serif-font text-coffee leading-loose text-center text-center text-center">
                     你的敏銳是富有生命力的能量 <br>
-                    以往因為還沒學會操作它，所以讓你常常處於生存模式 <br>
+                    以往因為還沒學會操作它 所以讓你常常處於生存模式 <br>
                     不斷地從關係中逃跑、從衝突中逃命 <br>
-                    逃避真心想要的而不敢追尋，但現在...
+                    逃避真心想要的而不敢追尋 但現在
                 </p>
-                <div class="h-16 w-px bg-gold/30 mx-auto"></div>
-                <h2 class="text-3xl md:text-4xl font-bold text-black italic serif-font text-center">
+                <div class="h-16 w-px bg-gold/30 mx-auto text-center text-center text-center text-center"></div>
+                <h2 class="text-3xl md:text-4xl font-bold text-black italic serif-font text-center text-center text-center text-center">
                     你可以重新定義這股能量的流向
                 </h2>
             </div>
 
-            <div class="flow-container">
-                <div class="flex flex-col lg:flex-row items-center justify-between gap-12 text-center text-center">
-                    <div class="flow-node mx-auto">
-                        <div class="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center text-3xl mx-auto">⚡</div>
-                        <h4 class="flow-node-title text-black text-center">受到外界刺激</h4>
-                        <p class="flow-node-desc px-4 text-center">環境、言語、情緒壓力壓力突襲</p>
+            <div class="flow-container text-center text-center">
+                <div class="flex flex-col lg:flex-row items-center justify-between gap-12 text-center mx-auto text-center text-center text-center">
+                    <div class="flow-node mx-auto text-center text-center">
+                        <div class="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center text-3xl mx-auto text-center text-center">⚡</div>
+                        <h4 class="flow-node-title text-black text-center text-center text-center text-center text-center">受到外界刺激</h4>
+                        <p class="flow-node-desc px-4 text-center text-center text-center text-center text-center">環境、言語、情緒壓力壓力突襲</p>
                     </div>
-                    <div class="flow-arrow hidden lg:flex text-4xl mx-auto">→</div>
-                    <div class="flow-node mx-auto">
-                        <div class="w-24 h-24 border-2 border-brand rounded-3xl flex items-center justify-center text-3xl shadow-lg shadow-brand/10 mx-auto">⚙️</div>
-                        <h4 class="flow-node-title text-brand text-center">啟動 PAUSE 系統</h4>
-                        <p class="flow-node-desc px-4 text-center">揮動 3 把手術刀，精準切割混亂</p>
+                    <div class="flow-arrow hidden lg:flex text-4xl text-center mx-auto text-center text-center text-center">→</div>
+                    <div class="flow-node mx-auto text-center text-center">
+                        <div class="w-24 h-24 border-2 border-brand rounded-3xl flex items-center justify-center text-3xl shadow-lg shadow-brand/10 mx-auto text-center text-center text-center text-center">⚙️</div>
+                        <h4 class="flow-node-title text-brand text-center text-center text-center text-center text-center text-center text-center">啟動 PAUSE 系統</h4>
+                        <p class="flow-node-desc px-4 text-center text-center text-center text-center text-center text-center text-center">揮動 3 把手術刀 精準切割混亂</p>
                     </div>
-                    <div class="flow-arrow hidden lg:flex text-4xl mx-auto">→</div>
-                    <div class="flow-node mx-auto">
-                        <div class="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center text-3xl mx-auto">🛡️</div>
-                        <h4 class="flow-node-title text-black text-center">建立能量緩衝</h4>
-                        <p class="flow-node-desc px-4 text-center">將過載轉化為可控訊號</p>
+                    <div class="flow-arrow hidden lg:flex text-4xl text-center mx-auto text-center text-center text-center text-center">→</div>
+                    <div class="flow-node mx-auto text-center text-center text-center text-center">
+                        <div class="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center text-3xl mx-auto text-center text-center text-center">🛡️</div>
+                        <h4 class="flow-node-title text-black text-center text-center text-center text-center text-center text-center text-center">建立能量緩衝</h4>
+                        <p class="flow-node-desc px-4 text-center text-center text-center text-center text-center text-center text-center text-center">將過載轉化為可控訊號</p>
                     </div>
-                    <div class="flow-arrow hidden lg:flex text-4xl mx-auto">→</div>
-                    <div class="flow-node mx-auto">
-                        <div class="w-24 h-24 bg-brand rounded-full flex items-center justify-center text-3xl text-white shadow-xl shadow-brand/20 animate-pulse mx-auto">✨</div>
-                        <h4 class="flow-node-title text-brand text-xl text-center">擁有餘裕的姿態</h4>
-                        <p class="flow-node-desc px-4 font-bold text-black italic text-center">「這一次 我不需要再逃了」</p>
+                    <div class="flow-arrow hidden lg:flex text-4xl text-center mx-auto text-center text-center text-center text-center text-center text-center">→</div>
+                    <div class="flow-node mx-auto text-center text-center text-center text-center text-center text-center">
+                        <div class="w-24 h-24 bg-brand rounded-full flex items-center justify-center text-3xl text-white shadow-xl shadow-brand/20 animate-pulse mx-auto text-center text-center text-center text-center">✨</div>
+                        <h4 class="flow-node-title text-brand text-xl text-center text-center text-center text-center text-center text-center text-center">擁有餘裕的姿態</h4>
+                        <p class="flow-node-desc px-4 font-bold text-black italic text-center text-center text-center text-center text-center text-center text-center text-center">「這一次 我不需要再逃了」</p>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-24 text-center space-y-8 animate-fade text-center">
-                <p class="text-xl text-stone-500 serif-font italic text-center">
+            <div class="mt-24 text-center space-y-8 animate-fade text-center mx-auto text-center text-center text-center">
+                <p class="text-xl text-stone-500 serif-font italic text-center text-center text-center text-center">
                     這是重構人生的最後一塊拼圖 <br>
                     也是你值得擁有的、那份在陽光下昂首的自由
                 </p>
-                <div class="h-10 w-px bg-gold/20 mx-auto text-center"></div>
+                <div class="h-10 w-px bg-gold/20 mx-auto text-center text-center mx-auto text-center text-center text-center"></div>
             </div>
         </div>
     </section>
 
     <!-- Section: Why PAUSE -->
-    <section class="py-32 px-6 bg-white text-left serif-font">
-        <div class="max-w-6xl mx-auto text-left">
-            <div class="mist-glass-container p-8 md:p-20 relative text-left">
+    <section class="py-32 px-6 bg-white text-left serif-font text-left text-left text-left">
+        <div class="max-w-6xl mx-auto text-left text-left text-left">
+            <div class="mist-glass-container p-8 md:p-20 relative text-left text-left text-left">
                 <div class="cta-mist-layer"><div class="cta-mist-1"></div><div class="cta-mist-2"></div><div class="cta-mist-3"></div></div>
 
-                <div class="relative z-10 grid md:grid-cols-2 gap-20 items-center text-left">
-                    <div class="space-y-12 text-left">
-                        <h2 class="text-3xl font-bold text-black italic text-left">🌿 為什麼是 PAUSE？</h2>
-                        <div class="space-y-8 text-stone-600 text-xl font-light text-left">
+                <div class="relative z-10 grid md:grid-cols-2 gap-20 items-center text-left text-left text-left text-left">
+                    <div class="space-y-12 text-left text-left text-left text-left">
+                        <h2 class="text-3xl font-bold text-black italic text-left text-left text-left text-left text-left">🌿 為什麼是 PAUSE？</h2>
+                        <div class="space-y-8 text-stone-600 text-xl font-light text-left text-left text-left text-left text-left text-left">
                             <p>你可能會問 為什麼是 PAUSE？<br> 因為對於習慣「逃命」的靈魂來說 「停下來」是這世界上最勇敢、也最至關核心的決定</p>
-                            <p>PAUSE 不是要你停滯，長久是要在這混亂的世界裡，為你撐開一塊可以呼吸、可以主導的「餘裕空間」</p>
-                            <div class="quote-block shadow-sm" style="background-color: rgba(255, 255, 255, 0.4); border-left: 5px solid var(--bronze-gold); padding: 2.5rem; border-radius: 1.5rem;">回收那些一直消耗、一直內鬥的力氣，讓你的敏銳從「負擔」轉化為「導航」<br> 讓我們一起，結束那場漫長的撤退</div>
-                            <p class="text-brand font-bold text-2xl italic text-left">「你不是太敏感 是敏感讓你更早察覺」</p>
+                            <p>PAUSE 不是要你停滯 長久是要在這混亂的世界裡 為你撐開一塊可以呼吸、可以主導的「餘裕空間」</p>
+                            <div class="quote-block shadow-sm text-left text-left text-left" style="background-color: rgba(255, 255, 255, 0.4); border-left: 5px solid var(--bronze-gold); padding: 2.5rem; border-radius: 1.5rem;">回收那些一直消耗、一直內鬥的力氣 讓你的敏銳從「負擔」轉化為「導航」<br> 讓我們一起 結束那場漫長的撤退</div>
+                            <p class="text-brand font-bold text-2xl italic text-left text-left text-left text-left">「你不是太敏感 是敏感讓你更早察覺」</p>
                         </div>
                     </div>
 
-                    <div class="bg-white/40 backdrop-blur-md p-10 md:p-14 rounded-[3.5rem] border border-white/40 shadow-xl space-y-10 text-left">
-                        <div class="space-y-8 text-lg text-stone-600 leading-loose text-left">
-                            <p>這套系統不是為了教你「如何躲得更好」，反而是不躲藏、不逃避，拿著你原生的好牌挺身站起來</p>
-                            <p>我希望這裡能成為你的滋養土壤，讓你在重構人生路徑的過程中，感到安全、感到被紮實地支撐著</p>
-                            <div class="h-px bg-stone-200 my-8"></div>
-                            <p>我生命裡也曾出現很多的貴人，他們穩定得不可思議<br> 他們的出現與陪伴，使我慢慢靜下來向內回探，也讓我也一步步重構人生，而現在，我也想成為能滋養你生命一段路的共行人</p>
+                    <div class="bg-white/40 backdrop-blur-md p-10 md:p-14 rounded-[3.5rem] border border-white/40 shadow-xl space-y-10 text-left text-left text-left text-left text-left">
+                        <div class="space-y-8 text-lg text-stone-600 leading-loose text-left text-left text-left text-left">
+                            <p>這套系統不是為了教你「如何躲得更好」 反而是不躲藏、不逃避 拿著你原生的好牌挺身站起來</p>
+                            <p>我希望這裡能成為你的滋養土壤 讓你在重構人生路徑的過程中 感到安全 感到被紮實地支撐著</p>
+                            <div class="h-px bg-stone-200 my-8 text-left text-left text-left text-left"></div>
+                            <p>我生命裡也曾出現很多的貴人 他們穩定得不可思議<br> 他們的出現與陪伴 使我慢慢靜下來向內回探 也讓我也一步步重構人生 而現在 我也想成為 能滋養你生命一段路的共行人</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- 工程日誌：轉化實錄 -->
-                <div id="log" class="mt-32 pt-20 border-t border-stone-200/50 text-left">
-                    <div class="text-center mb-20 animate-fade text-center">
-                        <p class="text-gold text-xs tracking-[0.4em] font-bold uppercase mb-4 italic text-center">Engineering Log</p>
-                        <h2 class="text-3xl md:text-5xl font-bold italic text-black serif-font text-center">轉化實錄</h2>
+                <div id="log" class="mt-32 pt-20 border-t border-stone-200/50 text-left text-left text-left">
+                    <div class="text-center mb-20 animate-fade text-center mx-auto text-center text-center text-center text-center text-center">
+                        <p class="text-gold text-xs tracking-[0.4em] font-bold uppercase mb-4 italic text-center text-center text-center text-center">Engineering Log</p>
+                        <h2 class="text-3xl md:text-5xl font-bold italic text-black serif-font text-center text-center text-center text-center text-center text-center">轉化實錄</h2>
                     </div>
 
-                    <div class="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto px-4 md:px-0 text-left">
-                        <div class="evidence-card p-10 md:p-14 text-left">
-                            <img src="https://i.ibb.co/5gFLLKNB/Screenshot-20251226-230206-Official-Account.jpg" alt="Official Account Feedback" class="evidence-screenshot">
-                            <div class="relative z-10 space-y-6 text-left">
-                                <span class="text-[10px] font-bold text-gold tracking-widest uppercase text-left">Log #01 / Official Account</span>
-                                <h4 class="text-2xl font-bold text-black serif-font text-left italic">找到靈魂的出口</h4>
-                                <div class="space-y-4 text-stone-600 text-lg leading-relaxed font-light text-left">
+                    <div class="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto px-4 md:px-0 text-left text-left text-left text-left text-left">
+                        <div class="evidence-card p-10 md:p-14 text-left text-left text-left">
+                            <img src="https://i.ibb.co/5gFLLKNB/Screenshot-20251226-230206-Official-Account.jpg" alt="Official Account Feedback" class="evidence-screenshot text-left text-left text-left text-left">
+                            <div class="relative z-10 space-y-6 text-left text-left text-left text-left">
+                                <span class="text-[10px] font-bold text-gold tracking-widest uppercase text-left text-left text-left text-left text-left">Log #01 / Official Account</span>
+                                <h4 class="text-2xl font-bold text-black serif-font text-left italic text-left text-left text-left text-left text-left">找到靈魂的出口</h4>
+                                <div class="space-y-4 text-stone-600 text-lg leading-relaxed font-light text-left text-left text-left text-left text-left text-left text-left text-left text-left">
                                     <p>「終於有人聽懂了我的求救訊號」</p>
-                                    <p>以前覺得敏感是詛咒，但在對焦過後，第一次感受到那股被誤用的能量可以如何回收，讓原本快要超載的靈魂 重新呼吸</p>
+                                    <p>以前覺得敏感是詛咒 但在對焦過後 第一次感受到那股被誤用的能量可以如何回收 讓原本快要超載的靈魂 重新呼吸</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="evidence-card p-10 md:p-14 text-left">
-                            <img src="https://i.ibb.co/vCLZzvtv/Screenshot-20251226-230654-Instagram.jpg" alt="Instagram Feedback" class="evidence-screenshot">
-                            <div class="relative z-10 space-y-6 text-left">
-                                <span class="text-[10px] font-bold text-gold tracking-widest uppercase text-left">Log #02 / Instagram</span>
-                                <h4 class="text-2xl font-bold text-black serif-font text-left italic">重奪生活主導權</h4>
-                                <div class="space-y-4 text-stone-600 text-lg leading-relaxed font-light text-left">
+                        <div class="evidence-card p-10 md:p-14 text-left text-left text-left text-left text-left">
+                            <img src="https://i.ibb.co/vCLZzvtv/Screenshot-20251226-230654-Instagram.jpg" alt="Instagram Feedback" class="evidence-screenshot text-left text-left text-left text-left text-left">
+                            <div class="relative z-10 space-y-6 text-left text-left text-left text-left text-left">
+                                <span class="text-[10px] font-bold text-gold tracking-widest uppercase text-left text-left text-left text-left text-left text-left text-left text-left">Log #02 / Instagram</span>
+                                <h4 class="text-2xl font-bold text-black serif-font text-left italic text-left text-left text-left text-left text-left text-left text-left">重奪生活主導權</h4>
+                                <div class="space-y-4 text-stone-600 text-lg leading-relaxed font-light text-left text-left text-left text-left text-left text-left text-left text-left text-left">
                                     <p>「這套系統讓我不再需要逃避」</p>
-                                    <p>這不只是觀念的改變，而是實踐工具的進場，讓我在面對外界刺激時 終於有了可以穩住自己的安全地帶</p>
+                                    <p>這不只是觀念的改變 而是實踐工具的進場 讓我在面對外界刺激時 終於有了可以穩住自己的安全地帶</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="meeting" class="mt-28 pt-24 border-t border-stone-200/50 text-center cta-content mx-auto">
-                    <div class="space-y-16 text-center mx-auto">
-                        <div class="space-y-6 text-center">
-                            <p class="text-brand text-lg md:text-xl font-medium tracking-[0.4em] uppercase italic serif-font opacity-80 text-center">給自己的敏銳 一個重新綻放的機會</p>
-                            <h2 class="text-4xl md:text-7xl font-bold text-black leading-tight italic serif-font text-center">不再是為了生存而逃避 <br> <span class="text-brand">而是為了生活而盛開</span></h2>
+                <div id="meeting" class="mt-28 pt-24 border-t border-stone-200/50 text-center cta-content mx-auto text-center text-center text-center text-center text-center text-center">
+                    <div class="space-y-16 text-center mx-auto text-center text-center text-center text-center">
+                        <div class="space-y-6 text-center text-center text-center text-center text-center text-center">
+                            <p class="text-brand text-lg md:text-xl font-medium tracking-[0.4em] uppercase italic serif-font opacity-80 text-center text-center text-center text-center text-center text-center text-center text-center">給自己的敏銳 一個重新綻放的機會</p>
+                            <h2 class="text-4xl md:text-7xl font-bold text-black leading-tight italic serif-font text-center text-center text-center text-center text-center text-center text-center text-center text-center">不再是為了生存而逃避 <br> <span class="text-brand text-center text-center text-center text-center text-center text-center">而是為了生活而盛開</span></h2>
                         </div>
-                        <div class="space-y-10 text-stone-600 text-lg md:text-2xl font-light max-w-3xl mx-auto leading-relaxed text-center">
-                            <p>這是一場專屬於高敏人的深度對焦，<br class="hidden md:block"> 我們將一起梳理那些纏繞已久的能量死結</p>
-                            <p class="text-black font-medium text-xl md:text-2xl text-center">我會帶你精準識別那些<span class="affirmation-marker">看不見</span>的電力漏洞，<br class="hidden md:block"> 並遞給你一把重奪生命主導權的情緒手術刀</p>
+                        <div class="space-y-10 text-stone-600 text-lg md:text-2xl font-light max-w-3xl mx-auto leading-relaxed text-center text-center text-center text-center text-center text-center text-center text-center">
+                            <p>這是一場專屬於高敏人的深度對焦 <br class="hidden md:block"> 我們將一起梳理那些纏繞已久的能量死結</p>
+                            <p class="text-black font-medium text-xl md:text-2xl text-center text-center text-center text-center text-center text-center text-center text-center text-center">我會帶你精準識別那些<span class="affirmation-marker text-center text-center text-center text-center text-center text-center text-center">看不見</span>的電力漏洞 <br class="hidden md:block"> 並遞給你一把重奪生命主導權的情緒手術刀</p>
                         </div>
-                        <div class="pt-10 flex flex-col items-center gap-8 text-center mx-auto">
-                            <a href="https://calendly.com/scarchen_hsp/1-1-meeting" target="_blank" class="btn-ultimate btn-pulse text-center">開啟我的「人生重構對焦會議」</a>
-                            <p class="text-stone-400 text-sm md:text-base italic serif-font text-center">這不是一次簡單的諮詢，而是你人生下半場的啟動點</p>
+                        <div class="pt-10 flex flex-col items-center gap-8 text-center mx-auto text-center text-center text-center text-center text-center text-center">
+                            <a href="https://calendly.com/scarchen_hsp/1-1-meeting" target="_blank" class="btn-ultimate btn-pulse text-center mx-auto text-center text-center text-center text-center text-center text-center text-center">開啟我的「人生重構對焦會議」</a>
+                            <p class="text-stone-400 text-sm md:text-base italic serif-font text-center text-center text-center text-center text-center text-center text-center">這不是一次簡單的諮詢 而是你人生下半場的啟動點</p>
                         </div>
-                        <div class="pt-12 text-stone-400 text-[10px] md:text-xs tracking-[0.5em] uppercase opacity-60 text-center">Limited monthly alignment slots for ready souls</div>
+                        <div class="pt-12 text-stone-400 text-[10px] md:text-xs tracking-[0.5em] uppercase opacity-60 text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center">Limited monthly alignment slots for ready souls</div>
                     </div>
                 </div>
             </div>
@@ -1014,14 +1051,14 @@
     </section>
 
     <!-- Footer -->
-    <footer class="py-24 px-6 bg-cream border-t border-stone-200 text-center mx-auto">
-        <div class="max-w-4xl mx-auto text-center">
-            <img src="https://i.ibb.co/DgV8LVCs/LOGO.png" alt="Scar Chen Footer Logo" class="h-16 mx-auto mb-10 opacity-80 text-center">
-            <div class="mb-12 text-center"><span class="text-coffee font-bold text-3xl tracking-[0.4em] italic uppercase serif-font text-black text-center">PAUSE ENGINEERING</span></div>
-            <div class="space-y-6 text-gold font-bold text-center">
-                <p class="text-base uppercase text-center">Scar Chen | HSP Life Reconstruction Engineering © 2024</p>
-                <div class="h-px w-12 bg-stone-300 mx-auto text-center"></div>
-                <p class="text-coffee font-medium leading-relaxed italic uppercase serif-font text-black text-center">理性重構感性 從易碎進化到反脆弱的系統方案</p>
+    <footer class="py-24 px-6 bg-cream border-t border-stone-200 text-center mx-auto text-center text-center text-center text-center text-center">
+        <div class="max-w-4xl mx-auto text-center text-center text-center text-center text-center text-center text-center text-center">
+            <img src="https://i.ibb.co/DgV8LVCs/LOGO.png" alt="Scar Chen Footer Logo" class="h-16 mx-auto mb-10 opacity-80 text-center text-center text-center text-center text-center text-center text-center text-center">
+            <div class="mb-12 text-center text-center text-center text-center text-center text-center text-center text-center text-center"><span class="text-coffee font-bold text-3xl tracking-[0.4em] italic uppercase serif-font text-black text-center text-center text-center text-center text-center text-center text-center">PAUSE ENGINEERING</span></div>
+            <div class="space-y-6 text-gold font-bold text-center text-center text-center text-center text-center text-center text-center text-center">
+                <p class="text-base uppercase text-center text-center text-center text-center text-center text-center text-center text-center">Scar Chen | HSP Life Reconstruction Engineering © 2024</p>
+                <div class="h-px w-12 bg-stone-300 mx-auto text-center text-center text-center text-center text-center text-center text-center text-center"></div>
+                <p class="text-coffee font-medium leading-relaxed italic uppercase serif-font text-black text-center text-center text-center text-center text-center text-center text-center text-center">理性重構感性 從易碎進化到反脆弱的系統方案</p>
             </div>
         </div>
     </footer>
